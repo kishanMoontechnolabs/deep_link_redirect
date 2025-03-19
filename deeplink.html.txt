@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    <script>
+        function openApp() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var productId = urlParams.get('id');
+
+            // Try opening the app
+            window.location.href = "myapp://product?id=" + productId;
+
+            // If the app is not installed, redirect to Play Store after 3 seconds
+            setTimeout(function() {
+                window.location.href = "https://play.google.com/store/apps/details?id=com.example.app";
+            }, 3000);
+        }
+    </script>
+</head>
+<body onload="openApp()">
+    <h2>Opening the app...</h2>
+    <p>If nothing happens, <a id="fallback" href="#">click here</a> to install the app.</p>
+    <script>
+        document.getElementById("fallback").href = "https://play.google.com/store/apps/details?id=com.example.app";
+    </script>
+</body>
+</html>
