@@ -6,18 +6,20 @@
     <title>Redirecting...</title>
     <script>
         function openApp() {
-            var urlParams = new URLSearchParams(window.location.search);
-            var encodedParams = urlParams.get('id'); // Get encoded parameters
+            var pathSegments = window.location.pathname.split("/"); // Get path parts
+            var encodedParams = pathSegments[pathSegments.length - 1]; // Get the last segment
 
             if (encodedParams) {
-                // Try opening the app with the deep link
-                var appLink = "myapp://deeplink?id=" + encodedParams;
+                var appLink = "myapp://deeplink/" + encodedParams; // Open app directly
+                var storeLink = "https://play.google.com/store/apps/details?id=com.example.app";
+
+                // Try opening the app
                 window.location.href = appLink;
 
-                // If the app is not installed, redirect to the Play Store after 2 seconds
-                setTimeout(function() {
-                    window.location.href = "https://play.google.com/store/apps/details?id=com.example.app";
-                }, 2000);
+                // If the app is not installed, redirect to Play Store after 1.5 seconds
+                setTimeout(function () {
+                    window.location.href = storeLink;
+                }, 1500);
             } else {
                 document.getElementById("status").innerText = "Invalid deep link.";
             }
