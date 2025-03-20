@@ -11,7 +11,7 @@
 
             if (encodedParams) {
                 // Try opening the app with the deep link
-                var appLink = "myapp://deeplink?id=" + encodedParams;
+                var appLink = "myapp://deeplink/" + encodedParams;
                 window.location.href = appLink;
 
                 // If the app is not installed, redirect to the Play Store after 2 seconds
