@@ -7,11 +7,11 @@
     <script>
         function openApp() {
             var urlParams = new URLSearchParams(window.location.search);
-            var encodedParams = urlParams.get('s'); // Get encoded parameters
+            var encodedParams = urlParams.get('id'); // Get encoded parameters
 
             if (encodedParams) {
                 // Try opening the app with the deep link
-                var appLink = "myapp://deeplink?s=" + encodedParams; // Use query parameter
+                var appLink = "myapp://deeplink?id=" + encodedParams; // Use query parameter
                 window.location.href = appLink;
 
                 // If the app is not installed, redirect to the Play Store after 2 seconds
