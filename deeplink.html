@@ -10,12 +10,16 @@
             var encodedParams = urlParams.get('id'); // Get encoded parameters
 
             if (encodedParams) {
-                // Try opening the app with the deep link
                 var appLink = "myapp://deeplink?id=" + encodedParams;
-                window.location.href = appLink;
 
-                // If the app is not installed, redirect to the Play Store after 2 seconds
-                setTimeout(function() {
+                // **Try opening the app faster using an iframe**
+                var iframe = document.createElement("iframe");
+                iframe.style.display = "none";
+                iframe.src = appLink;
+                document.body.appendChild(iframe);
+
+                // **If the app is not installed, redirect to Play Store after 2 seconds**
+                setTimeout(function () {
                     window.location.href = "https://play.google.com/store/apps/details?id=com.example.app";
                 }, 2000);
             } else {
