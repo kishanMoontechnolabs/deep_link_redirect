@@ -7,15 +7,16 @@
     <script>
         function openApp() {
             var urlParams = new URLSearchParams(window.location.search);
-            var productId = urlParams.get('id');
+            var encodedParams = window.location.pathname.split("/").pop(); // Get encoded data
 
             // Try opening the app
-            // window.location.href = "myapp://product?id=" + productId;
+            var appLink = "myapp://deeplink/" + encodedParams; // Your deep link scheme
+            window.location.href = appLink;
 
-            // If the app is not installed, redirect to Play Store after 3 seconds
+            // If the app is not installed, redirect to Play Store after 2 seconds
             setTimeout(function() {
-                window.location.href = "https://play.google.com/store/apps/details?id=com.example.app";
-            }, 3000);
+                window.location.href = "https://play.google.com/store/apps/details?id=com.example.app"; 
+            }, 2000);
         }
     </script>
 </head>
