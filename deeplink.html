@@ -7,22 +7,27 @@
     <script>
         function openApp() {
             var urlParams = new URLSearchParams(window.location.search);
-            var encodedParams = window.location.pathname.split("/").pop(); // Get encoded data
+            var encodedParams = urlParams.get('id'); // Get encoded parameters
 
-            // Try opening the app
-            var appLink = "myapp://deeplink/" + encodedParams; // Your deep link scheme
-            window.location.href = appLink;
+            if (encodedParams) {
+                // Try opening the app with the deep link
+                var appLink = "myapp://deeplink?id=" + encodedParams;
+                window.location.href = appLink;
 
-            // If the app is not installed, redirect to Play Store after 2 seconds
-            setTimeout(function() {
-                window.location.href = "https://play.google.com/store/apps/details?id=com.example.app"; 
-            }, 2000);
+                // If the app is not installed, redirect to the Play Store after 2 seconds
+                setTimeout(function() {
+                    window.location.href = "https://play.google.com/store/apps/details?id=com.example.app";
+                }, 2000);
+            } else {
+                document.getElementById("status").innerText = "Invalid deep link.";
+            }
         }
     </script>
 </head>
 <body onload="openApp()">
     <h2>Opening the app...</h2>
     <p>If nothing happens, <a id="fallback" href="#">click here</a> to install the app.</p>
+    <p id="status"></p>
     <script>
         document.getElementById("fallback").href = "https://play.google.com/store/apps/details?id=com.example.app";
     </script>
