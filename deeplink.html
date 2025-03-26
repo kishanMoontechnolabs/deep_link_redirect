@@ -10,7 +10,6 @@
             var encodedParams = urlParams.get('id'); // Get encoded parameters
 
             if (encodedParams) {
-                // Try opening the app with the deep link
                 var userAgent = navigator.userAgent.toLowerCase();
                 
                 // Default deep link URL
@@ -20,28 +19,20 @@
                 var androidFallbackUrl = "https://play.google.com/store/apps/details?id=com.whatsapp";
                 var iosFallbackUrl = "https://apps.apple.com/app/id123456789";
 
-                // Check if the user is on an Android device or iOS device
-                if (userAgent.indexOf("android") !== -1) {
-                    // Android device detected
-                    window.location.href = deepLink;
+                // Try opening the app using an invisible iframe
+                var iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = deepLink;
+                document.body.appendChild(iframe);
 
-                    // If the app is not installed, fallback to Play Store after 2 seconds
-                    setTimeout(function() {
+                // Redirect to the Play Store or App Store instantly if the app is not installed
+                setTimeout(function() {
+                    if (userAgent.indexOf("android") !== -1) {
                         window.location.href = androidFallbackUrl;
-                    }, 2000);
-                } else if (userAgent.indexOf("iphone") !== -1 || userAgent.indexOf("ipad") !== -1) {
-                    // iOS device detected
-                    window.location.href = deepLink;
-
-                    // If the app is not installed, fallback to App Store after 2 seconds
-                    setTimeout(function() {
+                    } else if (userAgent.indexOf("iphone") !== -1 || userAgent.indexOf("ipad") !== -1) {
                         window.location.href = iosFallbackUrl;
-                    }, 2000);
-                } else {
-                    // If neither Android nor iOS, show a message
-                    document.getElementById("status").innerText = "This link is intended for Android or iOS devices.";
-                    document.getElementById("fallback").href = "https://www.example.com"; // Custom fallback URL if needed
-                }
+                    }
+                }, 100); // Small timeout to allow deep link attempt
             } else {
                 document.getElementById("status").innerText = "Invalid deep link.";
             }
@@ -54,8 +45,7 @@
     <p id="status"></p>
 
     <script>
-        // Dynamically set the fallback URL if the user clicks the fallback link
-        document.getElementById("fallback").href = "https://play.google.com/store/apps/details?id=com.example.android";
+        document.getElementById("fallback").href = "https://play.google.com/store/apps/details?id=com.whatsapp";
     </script>
 </body>
 </html>
