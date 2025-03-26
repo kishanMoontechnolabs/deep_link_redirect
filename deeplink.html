@@ -7,16 +7,26 @@
     <script>
         function openApp() {
             var urlParams = new URLSearchParams(window.location.search);
-            var encodedParams = urlParams.get('id'); // Get the deep link parameters
+            var encodedParams = urlParams.get('id'); // Get deep link parameters
 
             if (encodedParams) {
                 var deepLinkUrl = "https://kishanmoontechnolabs.github.io/deep_link_redirect/?id=" + encodedParams;
-                window.location.href = deepLinkUrl; // Redirect to the HTTPS deep link
+                window.location.href = deepLinkUrl; // Try opening the app via HTTPS deep link
 
-                // Show a blank page to avoid any delay or unwanted content
+                // Show a blank page immediately
                 document.body.innerHTML = "";
+
+                // Redirect immediately based on platform if app is not installed
+                var userAgent = navigator.userAgent.toLowerCase();
+                if (userAgent.includes("android")) {
+                    window.location.replace("https://play.google.com/store/apps/details?id=com.example.android"); // Android fallback
+                } else if (userAgent.includes("iphone") || userAgent.includes("ipad")) {
+                    window.location.replace("https://apps.apple.com/app/id123456789"); // iOS fallback
+                } else {
+                    window.location.replace("https://www.example.com"); // Default fallback (for desktop or unsupported devices)
+                }
             } else {
-                document.body.innerHTML = ""; // If no parameters, also show a blank page
+                document.body.innerHTML = ""; // Show a blank page if no parameters
             }
         }
     </script>
