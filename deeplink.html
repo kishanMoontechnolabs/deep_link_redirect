@@ -11,31 +11,40 @@
 
             if (encodedParams) {
                 var userAgent = navigator.userAgent.toLowerCase();
-                
-                // Default deep link URL
                 var deepLink = "myapp://deeplink?id=" + encodedParams;
-
-                // Define the fallback URLs for Android and iOS
                 var androidFallbackUrl = "https://play.google.com/store/apps/details?id=com.whatsapp";
                 var iosFallbackUrl = "https://apps.apple.com/app/id123456789";
 
-                // Try opening the app using an invisible iframe
-                var iframe = document.createElement('iframe');
-                iframe.style.display = 'none';
-                iframe.src = deepLink;
-                document.body.appendChild(iframe);
-
-                // Redirect to the Play Store or App Store instantly if the app is not installed
-                setTimeout(function() {
-                    if (userAgent.indexOf("android") !== -1) {
-                        window.location.href = androidFallbackUrl;
-                    } else if (userAgent.indexOf("iphone") !== -1 || userAgent.indexOf("ipad") !== -1) {
-                        window.location.href = iosFallbackUrl;
-                    }
-                }, 100); // Small timeout to allow deep link attempt
+                // Detect platform and attempt to open app
+                if (userAgent.includes("android")) {
+                    redirectToApp(deepLink, androidFallbackUrl);
+                } else if (userAgent.includes("iphone") || userAgent.includes("ipad")) {
+                    redirectToApp(deepLink, iosFallbackUrl);
+                } else {
+                    document.getElementById("status").innerText = "This link is for Android or iOS devices.";
+                }
             } else {
                 document.getElementById("status").innerText = "Invalid deep link.";
             }
+        }
+
+        function redirectToApp(deepLink, fallbackUrl) {
+            var hidden = false;
+
+            // Detect if the app opened successfully
+            document.addEventListener("visibilitychange", function() {
+                hidden = document.hidden;
+            });
+
+            // Try opening the app
+            window.location.href = deepLink;
+
+            // If the app does not open, redirect to the fallback store link quickly
+            setTimeout(function() {
+                if (!hidden) {
+                    window.location.href = fallbackUrl;
+                }
+            }, 500);
         }
     </script>
 </head>
@@ -45,7 +54,7 @@
     <p id="status"></p>
 
     <script>
-        document.getElementById("fallback").href = "https://play.google.com/store/apps/details?id=com.whatsapp";
+        document.getElementById("fallback").href = "https://play.google.com/store/apps/details?id=com.example.android";
     </script>
 </body>
 </html>
