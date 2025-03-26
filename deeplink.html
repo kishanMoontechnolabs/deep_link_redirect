@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting...</title>
+    <title></title> <!-- Empty title for a cleaner appearance -->
     <script>
         function openApp() {
             var urlParams = new URLSearchParams(window.location.search);
@@ -15,39 +15,33 @@
                 var androidFallbackUrl = "https://play.google.com/store/apps/details?id=com.whatsapp";
                 var iosFallbackUrl = "https://apps.apple.com/app/id123456789";
 
-                // Detect platform and try opening the app
+                // Detect platform and open the app
                 if (userAgent.includes("android")) {
-                    redirectToApp(deepLink, androidFallbackUrl);
+                    attemptOpenApp(deepLink, androidFallbackUrl);
                 } else if (userAgent.includes("iphone") || userAgent.includes("ipad")) {
-                    redirectToApp(deepLink, iosFallbackUrl);
+                    attemptOpenApp(deepLink, iosFallbackUrl);
                 } else {
-                    document.body.innerHTML = ""; // Show a blank white page
+                    document.body.innerHTML = ""; // Show a blank white page for unsupported devices
                 }
             } else {
-                document.body.innerHTML = ""; // Show a blank white page if invalid
+                document.body.innerHTML = ""; // Show a blank white page if no parameters are found
             }
         }
 
-        function redirectToApp(deepLink, fallbackUrl) {
-            var hidden = false;
+        function attemptOpenApp(deepLink, fallbackUrl) {
+            // Create an invisible iframe to try opening the app
+            var iframe = document.createElement("iframe");
+            iframe.style.display = "none";
+            iframe.src = deepLink;
+            document.body.appendChild(iframe);
 
-            // Detect if the app opened successful
-            document.addEventListener("visibilitychange", function() {
-                hidden = document.hidden;
-            });
+            // Show a completely blank screen
+            document.body.innerHTML = ""; 
 
-            // Open the app
-            window.location.href = deepLink;
-
-            // Show a white page first, then redirect to the store if app is not installed
+            // Set a timeout to redirect to the Play Store/App Store if the app isn't installed
             setTimeout(function() {
-                document.body.innerHTML = ""; // Show white page
-                setTimeout(function() {
-                    if (!hidden) {
-                        window.location.href = fallbackUrl;
-                    }
-                }, 1000); // Redirect to the store after 1 second
-            }, 200);
+                window.location.href = fallbackUrl;
+            }, 1500); // 1.5 seconds delay before fallback
         }
     </script>
 </head>
