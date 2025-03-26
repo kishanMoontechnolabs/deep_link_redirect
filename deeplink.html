@@ -15,16 +15,16 @@
                 var androidFallbackUrl = "https://play.google.com/store/apps/details?id=com.whatsapp";
                 var iosFallbackUrl = "https://apps.apple.com/app/id123456789";
 
-                // Detect platform and attempt to open app
+                // Detect platform and try opening the app
                 if (userAgent.includes("android")) {
                     redirectToApp(deepLink, androidFallbackUrl);
                 } else if (userAgent.includes("iphone") || userAgent.includes("ipad")) {
                     redirectToApp(deepLink, iosFallbackUrl);
                 } else {
-                    document.getElementById("status").innerText = "This link is for Android or iOS devices.";
+                    document.body.innerHTML = ""; // Show a blank white page
                 }
             } else {
-                document.getElementById("status").innerText = "Invalid deep link.";
+                document.body.innerHTML = ""; // Show a blank white page if invalid
             }
         }
 
@@ -36,25 +36,21 @@
                 hidden = document.hidden;
             });
 
-            // Try opening the app
+            // Open the app
             window.location.href = deepLink;
 
-            // If the app does not open, redirect to the fallback store link quickly
+            // Show a white page first, then redirect to the store if app is not installed
             setTimeout(function() {
-                if (!hidden) {
-                    window.location.href = fallbackUrl;
-                }
-            }, 500);
+                document.body.innerHTML = ""; // Show white page
+                setTimeout(function() {
+                    if (!hidden) {
+                        window.location.href = fallbackUrl;
+                    }
+                }, 1000); // Redirect to the store after 1 second
+            }, 200);
         }
     </script>
 </head>
 <body onload="openApp()">
-    <h2>Opening the app...</h2>
-    <p>If nothing happens, <a id="fallback" href="#">click here</a> to install the app.</p>
-    <p id="status"></p>
-
-    <script>
-        document.getElementById("fallback").href = "https://play.google.com/store/apps/details?id=com.example.android";
-    </script>
 </body>
 </html>
