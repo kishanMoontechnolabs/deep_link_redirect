@@ -3,45 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title> <!-- Empty title for a cleaner appearance -->
+    <title></title> <!-- Empty title for cleaner appearance -->
     <script>
         function openApp() {
             var urlParams = new URLSearchParams(window.location.search);
-            var encodedParams = urlParams.get('id'); // Get encoded parameters
+            var encodedParams = urlParams.get('id'); // Get the deep link parameters
 
             if (encodedParams) {
-                var userAgent = navigator.userAgent.toLowerCase();
-                var deepLink = "myapp://deeplink?id=" + encodedParams;
-                var androidFallbackUrl = "https://play.google.com/store/apps/details?id=com.whatsapp";
-                var iosFallbackUrl = "https://apps.apple.com/app/id123456789";
+                var deepLinkUrl = "https://kishanmoontechnolabs.github.io/deep_link_redirect/?id=" + encodedParams;
+                window.location.href = deepLinkUrl; // Redirect to the HTTPS deep link
 
-                // Detect platform and open the app
-                if (userAgent.includes("android")) {
-                    attemptOpenApp(deepLink, androidFallbackUrl);
-                } else if (userAgent.includes("iphone") || userAgent.includes("ipad")) {
-                    attemptOpenApp(deepLink, iosFallbackUrl);
-                } else {
-                    document.body.innerHTML = ""; // Show a blank white page for unsupported devices
-                }
+                // Show a blank page to avoid any delay or unwanted content
+                document.body.innerHTML = "";
             } else {
-                document.body.innerHTML = ""; // Show a blank white page if no parameters are found
+                document.body.innerHTML = ""; // If no parameters, also show a blank page
             }
-        }
-
-        function attemptOpenApp(deepLink, fallbackUrl) {
-            // Create an invisible iframe to try opening the app
-            var iframe = document.createElement("iframe");
-            iframe.style.display = "none";
-            iframe.src = deepLink;
-            document.body.appendChild(iframe);
-
-            // Show a completely blank screen
-            document.body.innerHTML = ""; 
-
-            // Set a timeout to redirect to the Play Store/App Store if the app isn't installed
-            setTimeout(function() {
-                window.location.href = fallbackUrl;
-            }, 1500); // 1.5 seconds delay before fallback
         }
     </script>
 </head>
