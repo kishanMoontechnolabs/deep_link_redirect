@@ -11,13 +11,37 @@
 
             if (encodedParams) {
                 // Try opening the app with the deep link
-                var appLink = "myapp://deeplink?id=" + encodedParams; // Use query parameter
-                window.location.href = appLink;
+                var userAgent = navigator.userAgent.toLowerCase();
+                
+                // Default deep link URL
+                var deepLink = "myapp://deeplink?id=" + encodedParams;
 
-                // If the app is not installed, redirect to the Play Store after 2 seconds
-                setTimeout(function() {
-                    window.location.href = "https://play.google.com/store/apps/details?id=com.example.app";
-                }, 2000);
+                // Define the fallback URLs for Android and iOS
+                var androidFallbackUrl = "https://play.google.com/store/apps/details?id=com.example.android";
+                var iosFallbackUrl = "https://apps.apple.com/app/id123456789";
+
+                // Check if the user is on an Android device or iOS device
+                if (userAgent.indexOf("android") !== -1) {
+                    // Android device detected
+                    window.location.href = deepLink;
+
+                    // If the app is not installed, fallback to Play Store after 2 seconds
+                    setTimeout(function() {
+                        window.location.href = androidFallbackUrl;
+                    }, 2000);
+                } else if (userAgent.indexOf("iphone") !== -1 || userAgent.indexOf("ipad") !== -1) {
+                    // iOS device detected
+                    window.location.href = deepLink;
+
+                    // If the app is not installed, fallback to App Store after 2 seconds
+                    setTimeout(function() {
+                        window.location.href = iosFallbackUrl;
+                    }, 2000);
+                } else {
+                    // If neither Android nor iOS, show a message
+                    document.getElementById("status").innerText = "This link is intended for Android or iOS devices.";
+                    document.getElementById("fallback").href = "https://www.example.com"; // Custom fallback URL if needed
+                }
             } else {
                 document.getElementById("status").innerText = "Invalid deep link.";
             }
@@ -28,6 +52,10 @@
     <h2>Opening the app...</h2>
     <p>If nothing happens, <a id="fallback" href="#">click here</a> to install the app.</p>
     <p id="status"></p>
+
     <script>
-        document.getElementById("fallback").href = "https://play.google.com/store/apps/details?id=com.example.app";
+        // Dynamically set the fallback URL if the user clicks the fallback link
+        document.getElementById("fallback").href = "https://play.google.com/store/apps/details?id=com.example.android";
     </script>
+</body>
+</html>
